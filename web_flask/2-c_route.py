@@ -1,39 +1,29 @@
 #!/usr/bin/python3
-from flask import Flask
-"""class Flask"""
-
-
+"""Basic Flask web application
+"""
+from flask import Flask, render_template_string
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
-    """displays text
-    Returns:
-        text
+    """Simple greeting
     """
-    return "Hello HBNB!"
+    return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
-def display_hbnb():
-    """displays text
-    Returns:
-        text
+def hbnb():
+    """Simple greeting
     """
-    return "HBNB"
+    return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def display_text(text):
-    """displays text
-    Args:
-        text (str): text
-    Returns:
-        text
-    """
-    return 'C %s' % text.replace('_', ' ')
+def render_c(text=None):
+    f_text = text.replace('_', ' ')
+    return render_template_string('C {{ content }}', content=f_text)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

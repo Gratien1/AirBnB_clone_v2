@@ -1,74 +1,54 @@
 #!/usr/bin/python3
-from flask import Flask, render_template
-"""import class Flask, render_template method"""
-
-
+"""Basic Flask web application
+"""
+from flask import Flask, render_template, render_template_string, abort
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
-    """displays text
-    Returns:
-        text
+    """Simple greeting
     """
-    return "Hello HBNB!"
+    return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
-def display_hbnb():
-    """displays text
-    Returns:
-        text
+def hbnb():
+    """Simple greeting
     """
-    return "HBNB"
+    return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def display_C(text):
-    """displays text
-    Args:
-        text (str): text
-    Returns:
-        text
-    """
-    return 'C %s' % text.replace('_', ' ')
+def render_c(text=None):
+    f_text = text.replace('_', ' ')
+    return render_template_string('C {{ content }}', content=f_text)
 
 
-@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def display_python(text):
-    """displays text
-    Args:
-        text (str): text
-    Returns:
-        text
-    """
-    return 'Python %s' % text.replace('_', ' ')
+def render_py(text='is_cool'):
+    f_text = text.replace('_', ' ')
+    return render_template_string('Python {{ content }}', content=f_text)
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
-def display_num(n):
-    """displays text
-    Args:
-        n (int): number
-    Returns:
-        string
-    """
-    return "%d is a number" % n
+@app.route('/number/<n>', strict_slashes=False)
+def render_number(n=None):
+    try:
+        n = int(n)
+        return render_template_string('{{ content }} is a number', content=n)
+    except:
+        abort(404)
 
 
-@app.route('/number_template/<int:n>', strict_slashes=False)
-def display_HTML(n):
-    """displays text
-    Args:
-        n (int): number
-    Returns:
-        HTML page
-    """
-    return render_template('5-number.html', n=n)
+@app.route('/number_template/<n>', strict_slashes=False)
+def number_template(n=None):
+    try:
+        n = int(n)
+        return render_template('5-number.html', number=n)
+    except:
+        abort(404)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
